@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Customer Churn Prediction</title>
+</head>
+<body>
+    <h2>Customer Churn Predictor</h2>
+
+    <form action="/predict" method="post">
+
+        Gender:
+        <select name="gender">
+            <option value="Female">Female</option>
+            <option value="Male">Male</option>
+        </select><br>
+
+        Senior Citizen:
+        <select name="SeniorCitizen">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select><br>
+
+        Partner:
+        <select name="Partner">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select><br>
+
+        Dependents:
+        <select name="Dependents">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select><br>
+
+        Tenure:
+        <input type="text" name="tenure"><br>
+
+        Phone Service:
+        <select name="PhoneService">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select><br>
+
+        Multiple Lines:
+        <select name="MultipleLines">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+            <option value="No phone service">No phone service</option>
+        </select><br>
+
+        Internet Service:
+        <select name="InternetService">
+            <option value="DSL">DSL</option>
+            <option value="Fiber optic">Fiber optic</option>
+            <option value="No">No</option>
+        </select><br>
+
+        Online Security:
+        <select name="OnlineSecurity">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+            <option value="No internet service">No internet service</option>
+        </select><br>
+
+        Online Backup:
+        <select name="OnlineBackup">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+            <option value="No internet service">No internet service</option>
+        </select><br>
+
+        Device Protection:
+        <select name="DeviceProtection">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+            <option value="No internet service">No internet service</option>
+        </select><br>
+
+        Tech Support:
+        <select name="TechSupport">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+            <option value="No internet service">No internet service</option>
+        </select><br>
+
+        Streaming TV:
+        <select name="StreamingTV">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+            <option value="No internet service">No internet service</option>
+        </select><br>
+
+        Streaming Movies:
+        <select name="StreamingMovies">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+            <option value="No internet service">No internet service</option>
+        </select><br>
+
+        Contract:
+        <select name="Contract">
+            <option value="Month-to-month">Month-to-month</option>
+            <option value="One year">One year</option>
+            <option value="Two year">Two year</option>
+        </select><br>
+
+        Paperless Billing:
+        <select name="PaperlessBilling">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select><br>
+
+        Payment Method:
+        <select name="PaymentMethod">
+            <option value="Electronic check">Electronic check</option>
+            <option value="Mailed check">Mailed check</option>
+            <option value="Bank transfer (automatic)">Bank transfer (automatic)</option>
+            <option value="Credit card (automatic)">Credit card (automatic)</option>
+        </select><br>
+
+        Monthly Charges:
+        <input type="text" name="MonthlyCharges"><br>
+
+        Total Charges:
+        <input type="text" name="TotalCharges"><br><br>
+
+        <input type="submit" value="Predict">
+
+    </form>
+
+    <h3>{{ prediction_text }}</h3>
+
+</body>
+</html>
