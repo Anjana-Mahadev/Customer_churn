@@ -44,7 +44,7 @@ After training and evaluating the model on a holdout test set:
 | Recall        | 0.53   |
 | F1-Score      | 0.56   |
 
-> The ROC-AUC indicates good ranking ability, while precision and recall reflect moderate detection of churners. These metrics are suitable for a baseline production-ready model.
+The ROC-AUC indicates good ranking ability, while precision and recall reflect moderate detection of churners. These metrics are suitable for a baseline production-ready model.
 
 ---
 
