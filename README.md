@@ -49,10 +49,10 @@ The ROC-AUC indicates good ranking ability, while precision and recall reflect m
 ---
 
 ## How to Run the App
-'''bash
+```bash
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 python train.py
 python app.py
-'''
+```
