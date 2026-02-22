@@ -2,133 +2,266 @@
 <html>
 <head>
     <title>Customer Churn Prediction</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px 20px;
+        }
+
+        label {
+            font-weight: bold;
+            font-size: 14px;
+            color: #444;
+        }
+
+        select, input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            margin-top: 4px;
+        }
+
+        select:focus, input:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        .submit-btn {
+            grid-column: span 2;
+            padding: 12px;
+            background-color: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background-color: #5a67d8;
+        }
+
+        .prediction {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .submit-btn {
+                grid-column: span 1;
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <h2>Customer Churn Predictor</h2>
+
+<div class="container">
+    <h2>📊 Customer Churn Predictor</h2>
 
     <form action="/predict" method="post">
+        <div class="form-grid">
 
-        Gender:
-        <select name="gender">
-            <option value="Female">Female</option>
-            <option value="Male">Male</option>
-        </select><br>
+            <div>
+                <label>Gender</label>
+                <select name="gender">
+                    <option>Female</option>
+                    <option>Male</option>
+                </select>
+            </div>
 
-        Senior Citizen:
-        <select name="SeniorCitizen">
-            <option value="0">No</option>
-            <option value="1">Yes</option>
-        </select><br>
+            <div>
+                <label>Senior Citizen</label>
+                <select name="SeniorCitizen">
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
 
-        Partner:
-        <select name="Partner">
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-        </select><br>
+            <div>
+                <label>Partner</label>
+                <select name="Partner">
+                    <option>Yes</option>
+                    <option>No</option>
+                </select>
+            </div>
 
-        Dependents:
-        <select name="Dependents">
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-        </select><br>
+            <div>
+                <label>Dependents</label>
+                <select name="Dependents">
+                    <option>Yes</option>
+                    <option>No</option>
+                </select>
+            </div>
 
-        Tenure:
-        <input type="text" name="tenure"><br>
+            <div>
+                <label>Tenure (Months)</label>
+                <input type="text" name="tenure">
+            </div>
 
-        Phone Service:
-        <select name="PhoneService">
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-        </select><br>
+            <div>
+                <label>Phone Service</label>
+                <select name="PhoneService">
+                    <option>Yes</option>
+                    <option>No</option>
+                </select>
+            </div>
 
-        Multiple Lines:
-        <select name="MultipleLines">
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-            <option value="No phone service">No phone service</option>
-        </select><br>
+            <div>
+                <label>Multiple Lines</label>
+                <select name="MultipleLines">
+                    <option>Yes</option>
+                    <option>No</option>
+                    <option>No phone service</option>
+                </select>
+            </div>
 
-        Internet Service:
-        <select name="InternetService">
-            <option value="DSL">DSL</option>
-            <option value="Fiber optic">Fiber optic</option>
-            <option value="No">No</option>
-        </select><br>
+            <div>
+                <label>Internet Service</label>
+                <select name="InternetService">
+                    <option>DSL</option>
+                    <option>Fiber optic</option>
+                    <option>No</option>
+                </select>
+            </div>
 
-        Online Security:
-        <select name="OnlineSecurity">
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-            <option value="No internet service">No internet service</option>
-        </select><br>
+            <div>
+                <label>Online Security</label>
+                <select name="OnlineSecurity">
+                    <option>Yes</option>
+                    <option>No</option>
+                    <option>No internet service</option>
+                </select>
+            </div>
 
-        Online Backup:
-        <select name="OnlineBackup">
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-            <option value="No internet service">No internet service</option>
-        </select><br>
+            <div>
+                <label>Online Backup</label>
+                <select name="OnlineBackup">
+                    <option>Yes</option>
+                    <option>No</option>
+                    <option>No internet service</option>
+                </select>
+            </div>
 
-        Device Protection:
-        <select name="DeviceProtection">
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-            <option value="No internet service">No internet service</option>
-        </select><br>
+            <div>
+                <label>Device Protection</label>
+                <select name="DeviceProtection">
+                    <option>Yes</option>
+                    <option>No</option>
+                    <option>No internet service</option>
+                </select>
+            </div>
 
-        Tech Support:
-        <select name="TechSupport">
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-            <option value="No internet service">No internet service</option>
-        </select><br>
+            <div>
+                <label>Tech Support</label>
+                <select name="TechSupport">
+                    <option>Yes</option>
+                    <option>No</option>
+                    <option>No internet service</option>
+                </select>
+            </div>
 
-        Streaming TV:
-        <select name="StreamingTV">
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-            <option value="No internet service">No internet service</option>
-        </select><br>
+            <div>
+                <label>Streaming TV</label>
+                <select name="StreamingTV">
+                    <option>Yes</option>
+                    <option>No</option>
+                    <option>No internet service</option>
+                </select>
+            </div>
 
-        Streaming Movies:
-        <select name="StreamingMovies">
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-            <option value="No internet service">No internet service</option>
-        </select><br>
+            <div>
+                <label>Streaming Movies</label>
+                <select name="StreamingMovies">
+                    <option>Yes</option>
+                    <option>No</option>
+                    <option>No internet service</option>
+                </select>
+            </div>
 
-        Contract:
-        <select name="Contract">
-            <option value="Month-to-month">Month-to-month</option>
-            <option value="One year">One year</option>
-            <option value="Two year">Two year</option>
-        </select><br>
+            <div>
+                <label>Contract</label>
+                <select name="Contract">
+                    <option>Month-to-month</option>
+                    <option>One year</option>
+                    <option>Two year</option>
+                </select>
+            </div>
 
-        Paperless Billing:
-        <select name="PaperlessBilling">
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-        </select><br>
+            <div>
+                <label>Paperless Billing</label>
+                <select name="PaperlessBilling">
+                    <option>Yes</option>
+                    <option>No</option>
+                </select>
+            </div>
 
-        Payment Method:
-        <select name="PaymentMethod">
-            <option value="Electronic check">Electronic check</option>
-            <option value="Mailed check">Mailed check</option>
-            <option value="Bank transfer (automatic)">Bank transfer (automatic)</option>
-            <option value="Credit card (automatic)">Credit card (automatic)</option>
-        </select><br>
+            <div>
+                <label>Payment Method</label>
+                <select name="PaymentMethod">
+                    <option>Electronic check</option>
+                    <option>Mailed check</option>
+                    <option>Bank transfer (automatic)</option>
+                    <option>Credit card (automatic)</option>
+                </select>
+            </div>
 
-        Monthly Charges:
-        <input type="text" name="MonthlyCharges"><br>
+            <div>
+                <label>Monthly Charges</label>
+                <input type="text" name="MonthlyCharges">
+            </div>
 
-        Total Charges:
-        <input type="text" name="TotalCharges"><br><br>
+            <div>
+                <label>Total Charges</label>
+                <input type="text" name="TotalCharges">
+            </div>
 
-        <input type="submit" value="Predict">
+            <button type="submit" class="submit-btn">
+                🔍 Predict Churn
+            </button>
 
+        </div>
     </form>
 
-    <h3>{{ prediction_text }}</h3>
+    <div class="prediction">
+        {{ prediction_text }}
+    </div>
+</div>
 
 </body>
 </html>
