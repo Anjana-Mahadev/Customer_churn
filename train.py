@@ -4,10 +4,17 @@ import joblib
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.compose import ColumnTransformer
-from sklearn.pipeline import Pipeline
-from sklearn.metrics import roc_auc_score, accuracy_score, precision_score, recall_score, f1_score
+from sklearn.metrics import (
+    accuracy_score,
+    precision_score,
+    recall_score,
+    f1_score,
+    roc_auc_score
+)
+from sklearn.ensemble import GradientBoostingClassifier
 
-from xgboost import XGBClassifier
+from imblearn.over_sampling import SMOTE
+from imblearn.pipeline import Pipeline as ImbPipeline
 
 from utils.preprocessing import clean_data
 
@@ -16,8 +23,12 @@ from utils.preprocessing import clean_data
 # -------------------------------
 df = pd.read_csv("data/WA_Fn-UseC_-Telco-Customer-Churn.csv")
 
-# Clean data
 df = clean_data(df)
+
+# Ensure sklearn compatible dtypes
+for col in df.columns:
+    if not pd.api.types.is_numeric_dtype(df[col]):
+        df[col] = df[col].astype("object")
 
 X = df.drop("Churn", axis=1)
 y = df["Churn"]
@@ -29,46 +40,44 @@ X_train, X_test, y_train, y_test = train_test_split(
     X,
     y,
     test_size=0.2,
-    stratify=y,
-    random_state=42
+    random_state=42,
+    stratify=y
 )
 
 # -------------------------------
-# Column identification
+# Column Identification
 # -------------------------------
-num_cols = X.select_dtypes(include=["int64", "float64"]).columns
-cat_cols = X.select_dtypes(include=["object"]).columns
+num_cols = X_train.select_dtypes(include=["number"]).columns.tolist()
+cat_cols = X_train.select_dtypes(exclude=["number"]).columns.tolist()
 
 # -------------------------------
-# Preprocessing pipeline
+# Preprocessing
 # -------------------------------
 preprocessor = ColumnTransformer(
     transformers=[
         ("num", StandardScaler(), num_cols),
-        ("cat", OneHotEncoder(handle_unknown="ignore"), cat_cols),
+        (
+            "cat",
+            OneHotEncoder(
+                drop="first",                # match pd.get_dummies(drop_first=True)
+                handle_unknown="ignore",
+                sparse_output=False
+            ),
+            cat_cols
+        ),
     ]
 )
 
 # -------------------------------
-# Model
+# Pipeline with SMOTE
 # -------------------------------
-model = XGBClassifier(
-    n_estimators=200,
-    max_depth=4,
-    learning_rate=0.1,
-    subsample=0.8,
-    colsample_bytree=0.8,
-    eval_metric="logloss",
-    random_state=42
-)
-
-# -------------------------------
-# Full pipeline
-# -------------------------------
-pipeline = Pipeline(
+pipeline = ImbPipeline(
     steps=[
         ("preprocessor", preprocessor),
-        ("model", model)
+        ("smote", SMOTE(random_state=42)),
+        ("model", GradientBoostingClassifier(
+            random_state=42  # 🔥 default params (matches 2nd script)
+        ))
     ]
 )
 
@@ -80,21 +89,18 @@ pipeline.fit(X_train, y_train)
 # -------------------------------
 # Evaluate
 # -------------------------------
-y_pred_proba = pipeline.predict_proba(X_test)[:, 1]
 y_pred = pipeline.predict(X_test)
-roc_auc = roc_auc_score(y_test, y_pred_proba)
-accuracy = accuracy_score(y_test, y_pred)
-precision = precision_score(y_test, y_pred)
-recall = recall_score(y_test, y_pred)
-f1 = f1_score(y_test, y_pred)
+y_prob = pipeline.predict_proba(X_test)[:, 1]
 
-print(f"ROC-AUC Score: {roc_auc:.4f}")
-print(f"Accuracy: {accuracy:.2f}")
-print(f"Precision: {precision:.2f}")
-print(f"Recall: {recall:.2f}")
-print(f"F1-Score: {f1:.2f}")
+print("\n--- Gradient Boosting (Pipeline Version Matched) ---")
+print(f"Accuracy:  {accuracy_score(y_test, y_pred):.4f}")
+print(f"Recall:    {recall_score(y_test, y_pred):.4f}")
+print(f"F1-Score:  {f1_score(y_test, y_pred):.4f}")
+print(f"ROC-AUC:   {roc_auc_score(y_test, y_prob):.4f}")
+print(f"Precision:  {precision_score(y_test, y_pred):.4f}")
+
 # -------------------------------
-# Save model
+# Save Model
 # -------------------------------
 joblib.dump(pipeline, "model.pkl")
-print("✅ Model saved as model.pkl")
+print("\n✅ Model saved as model.pkl")

@@ -1,0 +1,32 @@
+,Churn
+Churn,1.0
+InternetService_Fiber optic,0.3080197449448227
+PaymentMethod_Electronic check,0.30191874901128496
+MonthlyCharges,0.19335642223784716
+PaperlessBilling_Yes,0.19182533166646884
+SeniorCitizen,0.15088932817647233
+StreamingTV_Yes,0.06322774611875735
+StreamingMovies_Yes,0.06138154801518696
+MultipleLines_Yes,0.04010212769982612
+PhoneService_Yes,0.011941980029003086
+gender_Male,-0.008612095078997828
+MultipleLines_No phone service,-0.011941980029003091
+DeviceProtection_Yes,-0.06615979128028962
+OnlineBackup_Yes,-0.08225486893814256
+PaymentMethod_Mailed check,-0.09168283858842928
+PaymentMethod_Credit card (automatic),-0.1343017506626284
+Partner_Yes,-0.1504475449591762
+Dependents_Yes,-0.16422140157972534
+TechSupport_Yes,-0.16467355590159405
+OnlineSecurity_Yes,-0.17122629194855232
+Contract_One year,-0.1778200183499079
+TotalCharges,-0.19903683186929222
+InternetService_No,-0.22789044975609363
+StreamingTV_No internet service,-0.22789044975609363
+OnlineSecurity_No internet service,-0.22789044975609363
+OnlineBackup_No internet service,-0.22789044975609363
+DeviceProtection_No internet service,-0.22789044975609363
+StreamingMovies_No internet service,-0.22789044975609363
+TechSupport_No internet service,-0.22789044975609363
+Contract_Two year,-0.30225346934965014
+tenure,-0.35222867011307885
