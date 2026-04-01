@@ -4,11 +4,13 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     """
     Cleans Telco churn dataset
     """
-    # Convert TotalCharges to numeric
-    df['TotalCharges'] = pd.to_numeric(df['TotalCharges'], errors='coerce')
+    # Work on a copy to avoid mutating caller-owned DataFrames.
+    df = df.copy()
 
-    # Drop missing values
-    df.dropna(inplace=True)
+    # Convert TotalCharges to numeric and impute only this known problematic field.
+    if 'TotalCharges' in df.columns:
+        df['TotalCharges'] = pd.to_numeric(df['TotalCharges'], errors='coerce')
+        df['TotalCharges'] = df['TotalCharges'].fillna(df['TotalCharges'].median())
 
     # Drop customerID (not useful for ML)
     if 'customerID' in df.columns:

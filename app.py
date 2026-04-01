@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request
 import pandas as pd
-import pickle
 import joblib
 
 app = Flask(__name__)
@@ -21,7 +20,7 @@ def predict():
         input_df = pd.DataFrame([request.form.to_dict()])
 
         # Convert numeric columns safely
-        numeric_cols = ['tenure', 'MonthlyCharges', 'TotalCharges']
+        numeric_cols = ['SeniorCitizen', 'tenure', 'MonthlyCharges', 'TotalCharges']
 
         for col in numeric_cols:
             input_df[col] = pd.to_numeric(input_df[col], errors='coerce')
@@ -51,4 +50,4 @@ def predict():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=False)

@@ -9,6 +9,7 @@ from sklearn.svm import SVC
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
 from sklearn.utils import resample
+from utils.preprocessing import clean_data
 
 # Local imports for XGBoost and SMOTE
 try:
@@ -18,48 +19,54 @@ except ImportError:
     XGB_AVAILABLE = False
 
 try:
-    from imblearn.over_sampling import SMOTE
-    SMOTE_AVAILABLE = True
+    from imblearn.over_sampling import RandomOverSampler
+    ROS_AVAILABLE = True
 except ImportError:
-    SMOTE_AVAILABLE = False
+    ROS_AVAILABLE = False
 
 # 1. Load Data
 df = pd.read_csv("WA_Fn-UseC_-Telco-Customer-Churn.csv")
 
 # 2. Preprocessing
-df['TotalCharges'] = pd.to_numeric(df['TotalCharges'], errors='coerce')
-df['TotalCharges'] = df['TotalCharges'].fillna(df['TotalCharges'].median())
-df = df.drop('customerID', axis=1)
-df['Churn'] = df['Churn'].map({'Yes': 1, 'No': 0})
+df = clean_data(df)
 
 # Identify numerical and categorical columns
 num_cols = ['tenure', 'MonthlyCharges', 'TotalCharges']
 cat_cols = [col for col in df.columns if col not in num_cols + ['Churn']]
 
-# One-Hot Encoding for categorical features
-df_encoded = pd.get_dummies(df, columns=cat_cols, drop_first=True)
-
-# Define X and y
-X = df_encoded.drop('Churn', axis=1)
-y = df_encoded['Churn']
+# Define X and y from raw data, then split before encoding to avoid schema leakage.
+X = df.drop('Churn', axis=1)
+y = df['Churn']
 
 # 3. Split Data
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+X_train, X_test, y_train, y_test = train_test_split(
+    X,
+    y,
+    test_size=0.2,
+    random_state=42,
+    stratify=y
+)
+
+# One-Hot Encoding separately, then align test columns to train schema.
+X_train = pd.get_dummies(X_train, columns=cat_cols, drop_first=True)
+X_test = pd.get_dummies(X_test, columns=cat_cols, drop_first=True)
+X_train, X_test = X_train.align(X_test, join='left', axis=1, fill_value=0)
 
 # 4. TARGETED SCALING (Only scale numeric features)
 scaler = StandardScaler()
 X_train_scaled = X_train.copy()
 X_test_scaled = X_test.copy()
-X_train_scaled[num_cols] = scaler.fit_transform(X_train[num_cols])
-X_test_scaled[num_cols] = scaler.transform(X_test[num_cols])
+present_num_cols = [col for col in num_cols if col in X_train.columns]
+X_train_scaled[present_num_cols] = scaler.fit_transform(X_train[present_num_cols])
+X_test_scaled[present_num_cols] = scaler.transform(X_test[present_num_cols])
 
-# 5. HANDLING IMBALANCE (SMOTE)
-if SMOTE_AVAILABLE:
-    print("Applying SMOTE...")
-    sm = SMOTE(random_state=42)
-    X_train_res, y_train_res = sm.fit_resample(X_train_scaled, y_train)
+# 5. HANDLING IMBALANCE
+if ROS_AVAILABLE:
+    print("Applying RandomOverSampler...")
+    ros = RandomOverSampler(random_state=42)
+    X_train_res, y_train_res = ros.fit_resample(X_train_scaled, y_train)
 else:
-    print("SMOTE not found. Using Random Over-Sampling...")
+    print("imblearn not found. Using manual random over-sampling...")
     train_data = pd.concat([X_train_scaled, y_train], axis=1)
     churn_no = train_data[train_data.Churn == 0]
     churn_yes = train_data[train_data.Churn == 1]
