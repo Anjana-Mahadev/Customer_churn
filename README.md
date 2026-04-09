@@ -3,6 +3,66 @@
 ## Overview
 This project predicts telecom customer churn (`1` = churn, `0` = no churn) using a production-style training pipeline and a Flask web app.
 
+## Exploratory Data Analysis (EDA) Insights
+
+The EDA notebook (`notebooks/eda.ipynb`) provides a comprehensive analysis of the Telco Customer Churn dataset. Key steps and findings:
+
+- **Data Cleaning:**
+  - Dropped `customerID` to prevent data leakage.
+  - Converted `TotalCharges` to numeric and imputed missing values (numeric: median, categorical: mode).
+
+- **Class Imbalance:**
+  - Churn is imbalanced (majority: No Churn). See `reports/figures/churn_distribution.png`.
+  - Churn rate: ~26% of customers churned, ~74% stayed.
+
+- **Feature Distributions:**
+  - Numerical and categorical feature distributions visualized (see `reports/figures/`).
+
+- **Top Churn Drivers (Correlation):**
+  - Highest positive correlations with churn:
+    - `InternetService_Fiber optic` (+0.31)
+    - `PaymentMethod_Electronic check` (+0.30)
+    - `MonthlyCharges` (+0.19)
+    - `PaperlessBilling_Yes` (+0.19)
+    - `SeniorCitizen` (+0.15)
+  - Highest negative correlations with churn:
+    - `OnlineSecurity_Yes` (−0.17)
+    - `TechSupport_Yes` (−0.16)
+    - `Dependents_Yes` (−0.16)
+    - `Partner_Yes` (−0.15)
+    - `PaymentMethod_Credit card (automatic)` (−0.13)
+
+- **Churn Rates by Feature:**
+  - Customers with fiber optic internet: ~42% churn rate (highest among internet types).
+  - Senior citizens: ~42% churn rate vs. ~24% for non-seniors.
+  - Customers without online security or tech support have much higher churn rates (~42%).
+  - Customers with partners or dependents churn less (~15–20%).
+
+- **Key EDA Takeaways:**
+  - Dataset cleaned and missing values handled.
+  - Class imbalance confirmed (churned customers are the minority).
+  - Fiber optic internet, electronic check payments, and lack of security/support are strong churn indicators.
+  - All EDA plots are saved in `reports/figures/` for reference.
+
+For full details and visualizations, see the [notebooks/eda.ipynb](notebooks/eda.ipynb) notebook and the `reports/` folder.
+
+## Exploratory Data Analysis (EDA) Summary
+
+The EDA notebook (`notebooks/eda.ipynb`) provides a comprehensive analysis of the Telco Customer Churn dataset. Key findings:
+
+- **Churn Rate:** ~26% of customers churned, ~74% stayed (class imbalance).
+- **Top Churn Drivers:**
+  - Fiber optic internet, electronic check payments, high monthly charges, paperless billing, and being a senior citizen are most associated with higher churn.
+  - Having online security, tech support, a partner, or dependents is associated with lower churn.
+- **Churn Rates by Feature:**
+  - Fiber optic internet users: ~42% churn rate (highest among internet types).
+  - Senior citizens: ~42% churn rate vs. ~24% for non-seniors.
+  - No online security/tech support: ~42% churn rate.
+  - With partner/dependents: ~15–20% churn rate.
+- **All EDA plots and correlation files are in `reports/figures/` and `reports/` for reference.**
+
+See the [notebooks/eda.ipynb](notebooks/eda.ipynb) notebook and the `reports/` folder for full details and visualizations.
+
 ## Current Pipeline
 The training flow in `train.py` uses:
 
@@ -91,11 +151,5 @@ python app.py
 Then open `http://127.0.0.1:5000`.
 
 ## Notes on Inference Inputs
-In `app.py`, these fields are coerced to numeric before prediction:
-
-- `SeniorCitizen`
-- `tenure`
-- `MonthlyCharges`
-- `TotalCharges`
-
+In `app.py`, these fields are coerced to numeric before prediction
 If coercion fails, the app returns an input validation message instead of crashing.
