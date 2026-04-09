@@ -9,7 +9,6 @@ venv/
 env/
 
 # Model artifacts
-model.pkl
 *.joblib
 
 # Notebook/runtime artifacts
