@@ -6,4 +6,5 @@ joblib
 matplotlib
 seaborn
 imbalanced-learn
+xgboost
 gunicorn
